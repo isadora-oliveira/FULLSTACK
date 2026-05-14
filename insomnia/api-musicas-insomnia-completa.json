@@ -1,0 +1,188 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-05-14T19:05:00.000Z",
+  "__export_source": "insomnia.desktop.app:v10.0.0",
+  "resources": [
+    {
+      "_id": "wrk_api_musicas_sem_variaveis",
+      "_type": "workspace",
+      "name": "API Musicas - Sem Variaveis",
+      "description": "Colecao com requests fixos (sem environment variables)",
+      "scope": "collection"
+    },
+
+    { "_id": "fld_00_health", "_type": "request_group", "parentId": "wrk_api_musicas_sem_variaveis", "name": "00 - Health" },
+    { "_id": "fld_01_auth", "_type": "request_group", "parentId": "wrk_api_musicas_sem_variaveis", "name": "01 - Auth Publico" },
+    { "_id": "fld_02_artistas", "_type": "request_group", "parentId": "wrk_api_musicas_sem_variaveis", "name": "02 - Artistas (Privado)" },
+    { "_id": "fld_03_albuns", "_type": "request_group", "parentId": "wrk_api_musicas_sem_variaveis", "name": "03 - Albuns (Privado)" },
+    { "_id": "fld_04_musicas", "_type": "request_group", "parentId": "wrk_api_musicas_sem_variaveis", "name": "04 - Musicas (Privado)" },
+    { "_id": "fld_05_playlists", "_type": "request_group", "parentId": "wrk_api_musicas_sem_variaveis", "name": "05 - Playlists (Privado)" },
+
+    { "_id": "req_hello", "_type": "request", "parentId": "fld_00_health", "name": "GET /hello", "method": "GET", "url": "http://localhost:3000/hello" },
+
+    {
+      "_id": "req_usuario_create",
+      "_type": "request",
+      "parentId": "fld_01_auth",
+      "name": "POST /api/usuarios",
+      "method": "POST",
+      "url": "http://localhost:3000/api/usuarios",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user_teste@api.com\",\n  \"senha\": \"123456\"\n}"
+      }
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_01_auth",
+      "name": "POST /api/login",
+      "method": "POST",
+      "url": "http://localhost:3000/api/login",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user_teste@api.com\",\n  \"senha\": \"123456\"\n}"
+      },
+      "description": "Copie o token retornado e cole no header Authorization das rotas privadas."
+    },
+
+    {
+      "_id": "req_artista_create",
+      "_type": "request",
+      "parentId": "fld_02_artistas",
+      "name": "POST /api/artistas",
+      "method": "POST",
+      "url": "http://localhost:3000/api/artistas",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{\n  \"nome\": \"The Weeknd\",\n  \"genero\": \"Pop\"\n}" }
+    },
+    { "_id": "req_artista_list", "_type": "request", "parentId": "fld_02_artistas", "name": "GET /api/artistas", "method": "GET", "url": "http://localhost:3000/api/artistas", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+    { "_id": "req_artista_get", "_type": "request", "parentId": "fld_02_artistas", "name": "GET /api/artistas/:id", "method": "GET", "url": "http://localhost:3000/api/artistas/1", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+    {
+      "_id": "req_artista_update",
+      "_type": "request",
+      "parentId": "fld_02_artistas",
+      "name": "PUT /api/artistas/:id",
+      "method": "PUT",
+      "url": "http://localhost:3000/api/artistas/1",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{\n  \"nome\": \"The Weeknd Atualizado\",\n  \"genero\": \"R&B\"\n}" }
+    },
+    { "_id": "req_artista_delete", "_type": "request", "parentId": "fld_02_artistas", "name": "DELETE /api/artistas/:id", "method": "DELETE", "url": "http://localhost:3000/api/artistas/1", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+
+    {
+      "_id": "req_album_create",
+      "_type": "request",
+      "parentId": "fld_03_albuns",
+      "name": "POST /api/albuns",
+      "method": "POST",
+      "url": "http://localhost:3000/api/albuns",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{\n  \"titulo\": \"After Hours\",\n  \"anoLancamento\": 2020,\n  \"artistaId\": 1\n}" }
+    },
+    { "_id": "req_album_list", "_type": "request", "parentId": "fld_03_albuns", "name": "GET /api/albuns", "method": "GET", "url": "http://localhost:3000/api/albuns", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+    { "_id": "req_album_get", "_type": "request", "parentId": "fld_03_albuns", "name": "GET /api/albuns/:id", "method": "GET", "url": "http://localhost:3000/api/albuns/1", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+    {
+      "_id": "req_album_update",
+      "_type": "request",
+      "parentId": "fld_03_albuns",
+      "name": "PUT /api/albuns/:id",
+      "method": "PUT",
+      "url": "http://localhost:3000/api/albuns/1",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{\n  \"titulo\": \"After Hours Deluxe\",\n  \"anoLancamento\": 2021\n}" }
+    },
+    { "_id": "req_album_delete", "_type": "request", "parentId": "fld_03_albuns", "name": "DELETE /api/albuns/:id", "method": "DELETE", "url": "http://localhost:3000/api/albuns/1", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+
+    {
+      "_id": "req_musica_create",
+      "_type": "request",
+      "parentId": "fld_04_musicas",
+      "name": "POST /api/musicas",
+      "method": "POST",
+      "url": "http://localhost:3000/api/musicas",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{\n  \"titulo\": \"Blinding Lights\",\n  \"duracaoSegundos\": 200,\n  \"artistaId\": 1,\n  \"albumId\": 1\n}" }
+    },
+    { "_id": "req_musica_list", "_type": "request", "parentId": "fld_04_musicas", "name": "GET /api/musicas", "method": "GET", "url": "http://localhost:3000/api/musicas", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+    { "_id": "req_musica_get", "_type": "request", "parentId": "fld_04_musicas", "name": "GET /api/musicas/:id", "method": "GET", "url": "http://localhost:3000/api/musicas/1", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+    {
+      "_id": "req_musica_update",
+      "_type": "request",
+      "parentId": "fld_04_musicas",
+      "name": "PUT /api/musicas/:id",
+      "method": "PUT",
+      "url": "http://localhost:3000/api/musicas/1",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{\n  \"titulo\": \"Blinding Lights (Remix)\",\n  \"duracaoSegundos\": 210\n}" }
+    },
+    { "_id": "req_musica_delete", "_type": "request", "parentId": "fld_04_musicas", "name": "DELETE /api/musicas/:id", "method": "DELETE", "url": "http://localhost:3000/api/musicas/1", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+
+    {
+      "_id": "req_playlist_create",
+      "_type": "request",
+      "parentId": "fld_05_playlists",
+      "name": "POST /api/playlists",
+      "method": "POST",
+      "url": "http://localhost:3000/api/playlists",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{\n  \"nome\": \"Playlist de Estudo\"\n}" }
+    },
+    { "_id": "req_playlist_list", "_type": "request", "parentId": "fld_05_playlists", "name": "GET /api/playlists", "method": "GET", "url": "http://localhost:3000/api/playlists", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+    {
+      "_id": "req_playlist_update",
+      "_type": "request",
+      "parentId": "fld_05_playlists",
+      "name": "PUT /api/playlists/:id",
+      "method": "PUT",
+      "url": "http://localhost:3000/api/playlists/1",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{\n  \"nome\": \"Playlist Atualizada\"\n}" }
+    },
+    { "_id": "req_playlist_delete", "_type": "request", "parentId": "fld_05_playlists", "name": "DELETE /api/playlists/:id", "method": "DELETE", "url": "http://localhost:3000/api/playlists/1", "headers": [ { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" } ] },
+    {
+      "_id": "req_playlist_add_song",
+      "_type": "request",
+      "parentId": "fld_05_playlists",
+      "name": "POST /api/playlists/:playlistId/musicas",
+      "method": "POST",
+      "url": "http://localhost:3000/api/playlists/1/musicas",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer COLE_SEU_TOKEN_AQUI" }
+      ],
+      "body": { "mimeType": "application/json", "text": "{\n  \"musicaId\": 1\n}" }
+    }
+  ]
+}

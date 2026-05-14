@@ -1,0 +1,217 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-05-11T21:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v10.0.0",
+  "resources": [
+    {
+      "_id": "wrk_api_musicas",
+      "_type": "workspace",
+      "name": "API Musicas - Trabalho",
+      "description": "Colecao para testar CRUD, auth JWT e many-to-many",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_api_musicas_base",
+      "_type": "environment",
+      "parentId": "wrk_api_musicas",
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "token": ""
+      }
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_api_musicas",
+      "name": "Auth"
+    },
+    {
+      "_id": "fld_artistas",
+      "_type": "request_group",
+      "parentId": "wrk_api_musicas",
+      "name": "Artistas"
+    },
+    {
+      "_id": "fld_albuns",
+      "_type": "request_group",
+      "parentId": "wrk_api_musicas",
+      "name": "Albuns"
+    },
+    {
+      "_id": "fld_musicas",
+      "_type": "request_group",
+      "parentId": "wrk_api_musicas",
+      "name": "Musicas"
+    },
+    {
+      "_id": "fld_playlists",
+      "_type": "request_group",
+      "parentId": "wrk_api_musicas",
+      "name": "Playlists"
+    },
+    {
+      "_id": "req_health",
+      "_type": "request",
+      "parentId": "wrk_api_musicas",
+      "name": "GET /hello",
+      "method": "GET",
+      "url": "{{ _.base_url }}/hello"
+    },
+    {
+      "_id": "req_usuario_cadastro",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "POST /api/usuarios",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/usuarios",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@faculdade.com\",\n  \"senha\": \"123456\"\n}"
+      }
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "POST /api/login",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/login",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"user@faculdade.com\",\n  \"senha\": \"123456\"\n}"
+      }
+    },
+    {
+      "_id": "req_artista_create",
+      "_type": "request",
+      "parentId": "fld_artistas",
+      "name": "POST /api/artistas",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/artistas",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"The Weeknd\",\n  \"genero\": \"Pop\"\n}"
+      }
+    },
+    {
+      "_id": "req_artista_list",
+      "_type": "request",
+      "parentId": "fld_artistas",
+      "name": "GET /api/artistas",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/artistas",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_album_create",
+      "_type": "request",
+      "parentId": "fld_albuns",
+      "name": "POST /api/albuns",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/albuns",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"After Hours\",\n  \"anoLancamento\": 2020,\n  \"artistaId\": 1\n}"
+      }
+    },
+    {
+      "_id": "req_album_list",
+      "_type": "request",
+      "parentId": "fld_albuns",
+      "name": "GET /api/albuns",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/albuns",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_musica_create",
+      "_type": "request",
+      "parentId": "fld_musicas",
+      "name": "POST /api/musicas",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/musicas",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"titulo\": \"Blinding Lights\",\n  \"duracaoSegundos\": 200,\n  \"artistaId\": 1,\n  \"albumId\": 1\n}"
+      }
+    },
+    {
+      "_id": "req_musica_list",
+      "_type": "request",
+      "parentId": "fld_musicas",
+      "name": "GET /api/musicas",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/musicas",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_playlist_create",
+      "_type": "request",
+      "parentId": "fld_playlists",
+      "name": "POST /api/playlists",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/playlists",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"nome\": \"Playlist de Estudo\"\n}"
+      }
+    },
+    {
+      "_id": "req_playlist_add_song",
+      "_type": "request",
+      "parentId": "fld_playlists",
+      "name": "POST /api/playlists/:playlistId/musicas",
+      "method": "POST",
+      "url": "{{ _.base_url }}/api/playlists/1/musicas",
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"musicaId\": 1\n}"
+      }
+    },
+    {
+      "_id": "req_playlist_list",
+      "_type": "request",
+      "parentId": "fld_playlists",
+      "name": "GET /api/playlists",
+      "method": "GET",
+      "url": "{{ _.base_url }}/api/playlists",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    }
+  ]
+}
