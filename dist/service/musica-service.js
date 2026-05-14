@@ -23,7 +23,13 @@ class MusicaService {
         if (!album) {
             throw { id: 404, msg: "Album nao encontrado." };
         }
-        if (album.artista?.id !== artistaId) {
+        const albumDoArtista = await this.albumRepository.findOne({
+            where: {
+                id: albumId,
+                artista: { id: artistaId },
+            },
+        });
+        if (!albumDoArtista) {
             throw { id: 400, msg: "O album nao pertence ao artista informado." };
         }
         const musicaExistente = await this.repository.findOne({
@@ -40,7 +46,7 @@ class MusicaService {
             titulo: tituloNormalizado,
             duracaoSegundos,
             artista,
-            album,
+            album: albumDoArtista,
         });
         return await this.repository.save(novaMusica);
     }
