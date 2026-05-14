@@ -24,12 +24,14 @@ export class MusicaService {
     artistaId: number,
     albumId: number,
   ): Promise<Musica> {
-    if (!titulo || !duracaoSegundos || !artistaId || !albumId) {
+    if (!titulo || !titulo.trim() || !duracaoSegundos || !artistaId || !albumId) {
       throw {
         id: 400,
         msg: "titulo, duracaoSegundos, artistaId e albumId sao obrigatorios.",
       };
     }
+
+    const tituloNormalizado = titulo.trim();
 
     const artista = await this.artistaRepository.findOne({ where: { id: artistaId } });
     const album = await this.albumRepository.findOne({ where: { id: albumId } });
@@ -42,8 +44,24 @@ export class MusicaService {
       throw { id: 404, msg: "Album nao encontrado." };
     }
 
+    if (album.artista?.id !== artistaId) {
+      throw { id: 400, msg: "O album nao pertence ao artista informado." };
+    }
+
+    const musicaExistente = await this.repository.findOne({
+      where: {
+        titulo: tituloNormalizado,
+        artista: { id: artistaId },
+        album: { id: albumId },
+      },
+    });
+
+    if (musicaExistente) {
+      throw { id: 409, msg: "Ja existe musica com esse titulo nesse album para esse artista." };
+    }
+
     const novaMusica = this.repository.create({
-      titulo,
+      titulo: tituloNormalizado,
       duracaoSegundos,
       artista,
       album,
@@ -76,8 +94,20 @@ export class MusicaService {
     }
 
     const musica = await this.buscarPorId(id);
+    const tituloNormalizado = titulo.trim();
+    const musicaExistente = await this.repository.findOne({
+      where: {
+        titulo: tituloNormalizado,
+        artista: { id: musica.artista?.id },
+        album: { id: musica.album?.id },
+      },
+    });
 
-    musica.titulo = titulo;
+    if (musicaExistente && musicaExistente.id !== id) {
+      throw { id: 409, msg: "Ja existe musica com esse titulo nesse album para esse artista." };
+    }
+
+    musica.titulo = tituloNormalizado;
     musica.duracaoSegundos = duracaoSegundos;
 
     return await this.repository.save(musica);

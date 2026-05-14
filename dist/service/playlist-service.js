@@ -7,11 +7,18 @@ class PlaylistService {
         this.musicaRepository = musicaRepository;
     }
     async inserir(nome) {
-        if (!nome) {
+        if (!nome || !nome.trim()) {
             throw { id: 400, msg: "Nome da playlist e obrigatorio." };
         }
+        const nomeNormalizado = nome.trim();
+        const playlistExistente = await this.repository.findOne({
+            where: { nome: nomeNormalizado },
+        });
+        if (playlistExistente) {
+            throw { id: 409, msg: "Ja existe playlist com esse nome." };
+        }
         // Ja cria com lista vazia para deixar o JSON de resposta mais claro.
-        const playlist = this.repository.create({ nome, musicas: [] });
+        const playlist = this.repository.create({ nome: nomeNormalizado, musicas: [] });
         return await this.repository.save(playlist);
     }
     async listar() {
@@ -25,15 +32,31 @@ class PlaylistService {
         return playlist;
     }
     async atualizar(id, nome) {
+        if (!Number.isInteger(id) || id <= 0) {
+            throw { id: 400, msg: "Id da playlist invalido." };
+        }
+        if (!nome || !nome.trim()) {
+            throw { id: 400, msg: "Nome da playlist e obrigatorio." };
+        }
         const playlist = await this.buscarPorId(id);
-        playlist.nome = nome ?? playlist.nome;
+        const nomeNormalizado = nome.trim();
+        const playlistExistente = await this.repository.findOne({
+            where: { nome: nomeNormalizado },
+        });
+        if (playlistExistente && playlistExistente.id !== id) {
+            throw { id: 409, msg: "Ja existe playlist com esse nome." };
+        }
+        playlist.nome = nomeNormalizado;
         return await this.repository.save(playlist);
     }
     async remover(id) {
+        if (!Number.isInteger(id) || id <= 0) {
+            throw { id: 400, msg: "Id da playlist invalido." };
+        }
         const playlist = await this.buscarPorId(id);
         await this.repository.remove(playlist);
     }
-    // Funcionalidade many-to-many exigida no conceito B.
+    // Funcionalidade many-to-many
     async adicionarMusicaNaPlaylist(playlistId, musicaId) {
         // 1) Busca playlist.
         const playlist = await this.buscarPorId(playlistId);

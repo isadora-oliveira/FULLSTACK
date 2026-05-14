@@ -12,12 +12,21 @@ export class PlaylistService {
   }
 
   async inserir(nome: string): Promise<Playlist> {
-    if (!nome) {
+    if (!nome || !nome.trim()) {
       throw { id: 400, msg: "Nome da playlist e obrigatorio." };
     }
 
+    const nomeNormalizado = nome.trim();
+    const playlistExistente = await this.repository.findOne({
+      where: { nome: nomeNormalizado },
+    });
+
+    if (playlistExistente) {
+      throw { id: 409, msg: "Ja existe playlist com esse nome." };
+    }
+
     // Ja cria com lista vazia para deixar o JSON de resposta mais claro.
-    const playlist = this.repository.create({ nome, musicas: [] });
+    const playlist = this.repository.create({ nome: nomeNormalizado, musicas: [] });
     return await this.repository.save(playlist);
   }
 
@@ -45,8 +54,16 @@ export class PlaylistService {
     }
 
     const playlist = await this.buscarPorId(id);
+    const nomeNormalizado = nome.trim();
+    const playlistExistente = await this.repository.findOne({
+      where: { nome: nomeNormalizado },
+    });
 
-    playlist.nome = nome;
+    if (playlistExistente && playlistExistente.id !== id) {
+      throw { id: 409, msg: "Ja existe playlist com esse nome." };
+    }
+
+    playlist.nome = nomeNormalizado;
 
     return await this.repository.save(playlist);
   }

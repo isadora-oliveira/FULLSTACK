@@ -12,9 +12,11 @@ export class AlbumService {
   }
 
   async inserir(titulo: string, anoLancamento: number, artistaId: number): Promise<Album> {
-    if (!titulo || !anoLancamento || !artistaId) {
+    if (!titulo || !titulo.trim() || !anoLancamento || !artistaId) {
       throw { id: 400, msg: "Titulo, anoLancamento e artistaId sao obrigatorios." };
     }
+
+    const tituloNormalizado = titulo.trim();
 
     const artista = await this.artistaRepository.findOne({ where: { id: artistaId } });
 
@@ -22,8 +24,19 @@ export class AlbumService {
       throw { id: 404, msg: "Artista nao encontrado para vincular no album." };
     }
 
+    const albumExistente = await this.repository.findOne({
+      where: {
+        titulo: tituloNormalizado,
+        artista: { id: artistaId },
+      },
+    });
+
+    if (albumExistente) {
+      throw { id: 409, msg: "Ja existe album com esse titulo para esse artista." };
+    }
+
     const novoAlbum = this.repository.create({
-      titulo,
+      titulo: tituloNormalizado,
       anoLancamento,
       artista,
     });
@@ -55,8 +68,19 @@ export class AlbumService {
     }
 
     const album = await this.buscarPorId(id);
+    const tituloNormalizado = titulo.trim();
+    const albumExistente = await this.repository.findOne({
+      where: {
+        titulo: tituloNormalizado,
+        artista: { id: album.artista?.id },
+      },
+    });
 
-    album.titulo = titulo;
+    if (albumExistente && albumExistente.id !== id) {
+      throw { id: 409, msg: "Ja existe album com esse titulo para esse artista." };
+    }
+
+    album.titulo = tituloNormalizado;
     album.anoLancamento = anoLancamento;
 
     return await this.repository.save(album);

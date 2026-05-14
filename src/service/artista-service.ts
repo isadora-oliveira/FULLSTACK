@@ -9,9 +9,20 @@ export class ArtistaService {
   }
 
   async inserir(artista: Artista): Promise<Artista> {
-    if (!artista || !artista.nome) {
+    if (!artista || !artista.nome || !artista.nome.trim()) {
       throw { id: 400, msg: "Nome do artista e obrigatorio." };
     }
+
+    const nomeNormalizado = artista.nome.trim();
+    const artistaExistente = await this.repository.findOne({
+      where: { nome: nomeNormalizado },
+    });
+
+    if (artistaExistente) {
+      throw { id: 409, msg: "Ja existe artista com esse nome." };
+    }
+
+    artista.nome = nomeNormalizado;
 
     return await this.repository.save(artista);
   }
@@ -40,8 +51,16 @@ export class ArtistaService {
     }
 
     const artista = await this.buscarPorId(id);
+    const nomeNormalizado = dados.nome.trim();
+    const artistaExistente = await this.repository.findOne({
+      where: { nome: nomeNormalizado },
+    });
 
-    artista.nome = dados.nome;
+    if (artistaExistente && artistaExistente.id !== id) {
+      throw { id: 409, msg: "Ja existe artista com esse nome." };
+    }
+
+    artista.nome = nomeNormalizado;
     artista.genero = dados.genero ?? artista.genero;
 
     return await this.repository.save(artista);
